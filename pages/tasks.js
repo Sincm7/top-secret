@@ -1,6 +1,9 @@
-import Layout from '../components/Layout'
+import AppShell from '../components/shell/AppShell'
+import { Sidebar } from '../components/shell/Sidebar'
 import { requireAuth } from '../lib/requireAuth'
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { Filter, Plus, Calendar, Users, Tag } from 'lucide-react'
 
 export const getServerSideProps = requireAuth
 
@@ -47,50 +50,140 @@ export default function Tasks({ user }) {
     load()
   }
 
-  return (
-    <Layout user={user}>
-      <div className="container">
-        <div className="grid md:grid-cols-3 gap-4">
-          <div className="md:col-span-2 card p-4">
-            <div className="text-lg font-semibold mb-3">Görevler</div>
-            <div className="space-y-2">
-              {tasks.map(t => (
-                <div key={t.id} className="p-3 rounded border border-zinc-200 dark:border-zinc-700">
-                  <div className="flex justify-between gap-2">
-                    <div>
-                      <div className="font-medium">{t.title}</div>
-                      <div className="text-sm opacity-75">{t.description}</div>
-                      <div className="text-xs opacity-60 mt-1">Atanan: {t.assignee_name || '—'} · Durum: {t.status}</div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <select defaultValue={t.status} onChange={e=>updateStatus(t.id, e.target.value)} className="text-sm">
-                        <option value="not_started">not_started</option>
-                        <option value="in_progress">in_progress</option>
-                        <option value="done">done</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="card p-4">
-            <div className="text-lg font-semibold mb-3">Yeni Görev (Yönetici)</div>
-            {user.role !== 'admin' ? (
-              <div className="text-sm opacity-70">Sadece yönetici görev oluşturabilir.</div>
-            ) : (
-              <form onSubmit={createTask} className="flex flex-col gap-2">
-                <input value={title} onChange={e=>setTitle(e.target.value)} required placeholder="Başlık" />
-                <textarea value={description} onChange={e=>setDescription(e.target.value)} placeholder="Açıklama" />
-                <select value={assignee} onChange={e=>setAssignee(e.target.value)} required>
-                  {users.map(u => <option key={u.id} value={u.id}>{u.username}</option>)}
-                </select>
-                <button className="btn mt-1">Oluştur</button>
-              </form>
-            )}
+  const columns = [
+    { id: 'not_started', title: 'Backlog', color: 'bg-brand-1' },
+    { id: 'in_progress', title: 'In Progress', color: 'bg-brand-2' },
+    { id: 'done', title: 'Done', color: 'bg-brand-4' }
+  ]
+
+  // TODO(aurora-refactor): Discord benzeri tasks sidebar - filtreler ve görünümler
+  const sidebarContent = (
+    <Sidebar>
+      <div className="space-y-4">
+        {/* Filters */}
+        <div>
+          <div className="mb-2 text-xs font-medium opacity-70 uppercase tracking-wider">Filters</div>
+          <div className="space-y-1">
+            {['All Tasks', 'My Tasks', 'High Priority', 'Overdue'].map(filter => (
+              <motion.div
+                key={filter}
+                whileHover={{ x: 2 }}
+                className="group flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition hover:bg-white/5 cursor-pointer"
+              >
+                <Filter className="h-4 w-4 opacity-60" />
+                <span className="opacity-80 group-hover:opacity-100">{filter}</span>
+              </motion.div>
+            ))}
           </div>
         </div>
+
+        {/* Quick Actions */}
+        {user.role === 'admin' && (
+          <div>
+            <div className="mb-2 text-xs font-medium opacity-70 uppercase tracking-wider">Quick Actions</div>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              className="glass w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition hover:shadow-glow"
+            >
+              <Plus className="h-4 w-4" />
+              New Task
+            </motion.button>
+          </div>
+        )}
       </div>
-    </Layout>
+    </Sidebar>
+  )
+
+  return (
+    <AppShell title="Tasks" sidebar={sidebarContent}>
+      <div className="space-y-6">
+        {/* Kanban Board */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {columns.map(column => (
+            <motion.div
+              key={column.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass rounded-2xl p-4"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className={`h-3 w-3 rounded-full ${column.color}`} />
+                <div className="text-sm font-medium opacity-90">{column.title}</div>
+                <div className="ml-auto text-xs opacity-60">
+                  {tasks.filter(t => t.status === column.id).length}
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                {tasks
+                  .filter(task => task.status === column.id)
+                  .map(task => (
+                    <motion.div
+                      key={task.id}
+                      whileHover={{ y: -2, scale: 1.01 }}
+                      className="glass rounded-xl p-3 transition hover:shadow-glow cursor-pointer"
+                    >
+                      <div className="font-medium text-sm mb-1">{task.title}</div>
+                      <div className="text-xs opacity-70 mb-2 line-clamp-2">{task.description}</div>
+                      <div className="flex items-center justify-between text-xs opacity-60">
+                        <span>{task.assignee_name || '—'}</span>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          <span>2d</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Create Task Form (Admin Only) */}
+        {user.role === 'admin' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass rounded-2xl p-4"
+          >
+            <div className="text-sm font-medium mb-3 opacity-90">Create New Task</div>
+            <form onSubmit={createTask} className="space-y-3">
+              <input 
+                value={title} 
+                onChange={e=>setTitle(e.target.value)} 
+                required 
+                placeholder="Task title" 
+                className="w-full"
+              />
+              <textarea 
+                value={description} 
+                onChange={e=>setDescription(e.target.value)} 
+                placeholder="Description" 
+                className="w-full resize-none"
+                rows={3}
+              />
+              <div className="flex gap-2">
+                <select 
+                  value={assignee} 
+                  onChange={e=>setAssignee(e.target.value)} 
+                  required
+                  className="flex-1"
+                >
+                  {users.map(u => <option key={u.id} value={u.id}>{u.username}</option>)}
+                </select>
+                <motion.button 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="bg-brand-1 text-white px-4 py-2 rounded-xl transition hover:shadow-glow"
+                >
+                  Create
+                </motion.button>
+              </div>
+            </form>
+          </motion.div>
+        )}
+      </div>
+    </AppShell>
   )
 }

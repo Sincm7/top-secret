@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { Shield, User, Lock, LogIn, Building } from 'lucide-react'
 
 export default function Login() {
   const [username, setUsername] = useState('')
@@ -21,24 +22,86 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="card w-full max-w-md p-6">
-        <h1 className="text-2xl font-semibold mb-4 text-center">Portal'a Giriş Yap</h1>
-        <form onSubmit={onSubmit} className="flex flex-col gap-3">
-          <label className="flex flex-col gap-1">
-            <span>Kullanıcı Adı</span>
-            <input value={username} onChange={e=>setUsername(e.target.value)} required placeholder="kullanici" />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span>Proje Adı</span>
-            <input value={project} onChange={e=>setProject(e.target.value)} required placeholder="Top Secret" />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span>Şifre</span>
-            <input type="password" value={password} onChange={e=>setPassword(e.target.value)} required placeholder="••••••••" />
-          </label>
-          {error && <div className="text-red-600 text-sm">{error}</div>}
-          <button className="btn mt-2">Giriş Yap</button>
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
+      {/* Aurora Background */}
+      <div className="aurora-bg" />
+      <div className="noise-overlay" />
+      
+      {/* Top Secret Header */}
+      <div className="absolute top-6 left-6 z-10">
+        <div className="glass rounded-2xl px-4 py-2 flex items-center gap-2">
+          <Shield className="h-5 w-5 text-blue-500" />
+          <span className="font-semibold text-lg">Top Secret</span>
+        </div>
+      </div>
+
+      {/* Main Form */}
+      <div className="glass rounded-3xl p-8 w-full max-w-md relative z-10">
+        <div className="text-center mb-6">
+          <div className="glass rounded-2xl p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <LogIn className="h-8 w-8 text-blue-500" />
+          </div>
+          <h1 className="text-2xl font-bold mb-2">Portal'a Giriş Yap</h1>
+          <p className="text-sm opacity-70">Güvenli erişim için bilgilerinizi girin</p>
+        </div>
+        
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-sm font-medium opacity-80">
+              <User className="h-4 w-4" />
+              Kullanıcı Adı
+            </label>
+            <input 
+              value={username} 
+              onChange={e=>setUsername(e.target.value)} 
+              required 
+              placeholder="kullanici" 
+              className="w-full glass rounded-xl px-4 py-3 transition-all duration-200 focus:ring-2 focus:ring-blue-500/30 hover:shadow-glow"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-sm font-medium opacity-80">
+              <Building className="h-4 w-4" />
+              Proje Adı
+            </label>
+            <input 
+              value={project} 
+              onChange={e=>setProject(e.target.value)} 
+              required 
+              placeholder="Top Secret" 
+              className="w-full glass rounded-xl px-4 py-3 transition-all duration-200 focus:ring-2 focus:ring-blue-500/30 hover:shadow-glow"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-sm font-medium opacity-80">
+              <Lock className="h-4 w-4" />
+              Şifre
+            </label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={e=>setPassword(e.target.value)} 
+              required 
+              placeholder="••••••••" 
+              className="w-full glass rounded-xl px-4 py-3 transition-all duration-200 focus:ring-2 focus:ring-blue-500/30 hover:shadow-glow"
+            />
+          </div>
+          
+          {error && (
+            <div className="glass rounded-xl px-4 py-3 text-sm text-red-400 bg-red-400/10 border border-red-400/20">
+              {error}
+            </div>
+          )}
+          
+          <button 
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 hover:scale-[1.02] hover:shadow-glow active:scale-[0.98] flex items-center justify-center gap-2"
+          >
+            <LogIn className="h-4 w-4" />
+            Giriş Yap
+          </button>
         </form>
       </div>
     </div>
