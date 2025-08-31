@@ -172,7 +172,7 @@ export default function Apps({ user }) {
                 <select 
                   value={status} 
                   onChange={e=>setStatus(e.target.value)}
-                  className="bg-transparent"
+                  className="w-full"
                 >
                   <option value="development">Development</option>
                   <option value="update">Update</option>

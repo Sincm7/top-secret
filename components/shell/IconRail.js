@@ -23,15 +23,15 @@ export function IconRail() {
 
   if (!mounted) {
     return (
-      <div className="flex h-full w-16 flex-col items-center gap-3 border-r border-gray-200 dark:border-gray-700 py-3">
+      <div className="flex h-full w-12 lg:w-16 flex-col items-center gap-2 lg:gap-3 border-r border-gray-200 dark:border-gray-700 py-2 lg:py-3">
         {items.map(({ href, icon: Icon, label }) => (
-          <div key={href} className="glass flex h-12 w-12 items-center justify-center rounded-2xl">
-            <Icon className="h-5 w-5 opacity-80" />
+          <div key={href} className="glass flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-xl lg:rounded-2xl">
+            <Icon className="h-4 w-4 lg:h-5 lg:w-5 opacity-80" />
           </div>
         ))}
         <div className="mt-auto">
-          <div className="glass flex h-12 w-12 items-center justify-center rounded-2xl">
-            <Sun className="h-5 w-5 opacity-80" />
+          <div className="glass flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-xl lg:rounded-2xl">
+            <Sun className="h-4 w-4 lg:h-5 lg:w-5 opacity-80" />
           </div>
         </div>
       </div>
@@ -39,21 +39,21 @@ export function IconRail() {
   }
 
   return (
-    <div className="flex h-full w-16 flex-col items-center gap-3 border-r border-gray-200 dark:border-gray-700 py-3">
+    <div className="flex h-full w-12 lg:w-16 flex-col items-center gap-2 lg:gap-3 border-r border-gray-200 dark:border-gray-700 py-2 lg:py-3">
       {items.map(({ href, icon: Icon, label }) => {
         const active = router.pathname?.startsWith(href)
         return (
           <Link key={href} href={href} className="group relative">
             <div
-              className={`glass flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-200 hover:scale-105 ${
+              className={`glass flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-xl lg:rounded-2xl transition-all duration-200 hover:scale-105 ${
                 active ? 'ring-1 ring-blue-500/20 shadow-glow' : ''
               }`}
             >
-              <Icon className={`h-5 w-5 ${
+              <Icon className={`h-4 w-4 lg:h-5 lg:w-5 ${
                 active ? '' : 'opacity-80 group-hover:opacity-100'
               }`} />
             </div>
-            <span className="pointer-events-none absolute left-14 top-1/2 -translate-y-1/2 rounded-xl bg-black/70 px-2 py-1 text-xs text-white opacity-0 shadow-lg backdrop-blur-sm transition-opacity group-hover:opacity-100">
+            <span className="pointer-events-none absolute left-12 lg:left-14 top-1/2 -translate-y-1/2 rounded-xl bg-black/70 px-2 py-1 text-xs text-white opacity-0 shadow-lg backdrop-blur-sm transition-opacity group-hover:opacity-100">
               {label}
             </span>
           </Link>
@@ -64,12 +64,12 @@ export function IconRail() {
       <div className="mt-auto">
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="glass flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-200 hover:scale-105 hover:shadow-glow"
+          className="glass flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-xl lg:rounded-2xl transition-all duration-200 hover:scale-105 hover:shadow-glow"
         >
           {theme === 'dark' ? (
-            <Sun className="h-5 w-5 opacity-80 hover:opacity-100" />
+            <Sun className="h-4 w-4 lg:h-5 lg:w-5 opacity-80 hover:opacity-100" />
           ) : (
-            <Moon className="h-5 w-5 opacity-80 hover:opacity-100" />
+            <Moon className="h-4 w-4 lg:h-5 lg:w-5 opacity-80 hover:opacity-100" />
           )}
         </button>
       </div>

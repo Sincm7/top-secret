@@ -183,7 +183,7 @@ export default function Admin({ user }) {
               <select 
                 value={role} 
                 onChange={e=>setRole(e.target.value)}
-                className="w-full bg-transparent"
+                className="w-full"
               >
                 <option value="member">Member</option>
                 <option value="admin">Admin</option>

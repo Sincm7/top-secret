@@ -3,7 +3,7 @@ import { Sidebar } from '../components/shell/Sidebar'
 import { requireAuth } from '../lib/requireAuth'
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Hash, MessageCircle, Users, FolderOpen } from 'lucide-react'
+import { Hash, MessageCircle } from 'lucide-react'
 
 export const getServerSideProps = requireAuth
 
@@ -89,9 +89,13 @@ export default function Chat({ user }) {
 
   return (
     <AppShell title="Chat" sidebar={sidebarContent}>
-      <div className="mx-auto w-full max-w-4xl space-y-4">
-        {/* Message Groups */}
-        <div ref={listRef} className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+      <div className="flex flex-col h-full">
+        {/* Message Groups - Scrollable area */}
+        <div 
+          ref={listRef} 
+          className="flex-1 overflow-y-auto space-y-4 pb-4"
+          style={{ height: 'calc(100vh - 200px)' }}
+        >
           {messages.map(m => (
             <motion.div
               key={m.id}
@@ -99,8 +103,8 @@ export default function Chat({ user }) {
               animate={{ opacity: 1, y: 0 }}
               className={`group relative ${m.sender_id === user.id ? 'text-right' : ''}`}
             >
-              <div className={`glass rounded-2xl p-4 transition hover:shadow-glow ${
-                m.sender_id === user.id ? 'ml-auto max-w-[75%]' : 'mr-auto max-w-[75%]'
+              <div className={`glass rounded-2xl p-3 lg:p-4 transition hover:shadow-glow ${
+                m.sender_id === user.id ? 'ml-auto max-w-[85%] lg:max-w-[75%]' : 'mr-auto max-w-[85%] lg:max-w-[75%]'
               }`}>
                 <div className="mb-1 text-xs opacity-70">
                   {m.sender_name} • {new Date(m.created_at).toLocaleTimeString()}
@@ -116,27 +120,29 @@ export default function Chat({ user }) {
           ))}
         </div>
 
-        {/* Composer */}
+        {/* Composer - Fixed at bottom */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass sticky bottom-4 flex items-center gap-2 rounded-2xl p-3"
+          className="glass rounded-2xl p-3 lg:p-4 mt-4"
         >
-          <input 
-            className="flex-1 rounded-xl bg-transparent px-3 py-2 outline-none placeholder:opacity-60" 
-            placeholder="Mesaj yaz…" 
-            value={text} 
-            onChange={e => setText(e.target.value)}
-            onKeyDown={e => { if(e.key === 'Enter') send() }}
-          />
-          <motion.button 
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={send}
-            className="rounded-xl bg-brand-1 px-4 py-2 text-sm font-medium text-white transition hover:shadow-glow"
-          >
-            Gönder
-          </motion.button>
+          <div className="flex items-center gap-2">
+            <input 
+              className="flex-1 rounded-xl bg-transparent px-3 py-2 outline-none placeholder:opacity-60 text-sm" 
+              placeholder="Mesaj yaz…" 
+              value={text} 
+              onChange={e => setText(e.target.value)}
+              onKeyDown={e => { if(e.key === 'Enter') send() }}
+            />
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={send}
+              className="rounded-xl bg-brand-1 px-3 lg:px-4 py-2 text-sm font-medium text-white transition hover:shadow-glow"
+            >
+              Gönder
+            </motion.button>
+          </div>
         </motion.div>
       </div>
     </AppShell>
