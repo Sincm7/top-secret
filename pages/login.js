@@ -37,9 +37,9 @@ export default function Login() {
       </div>
 
       {/* Main Content Container */}
-      <div className="relative z-10 w-full max-w-6xl flex justify-center">
+      <div className="relative z-10 w-full max-w-6xl flex flex-col lg:justify-center lg:items-center">
         {/* Login Form - Centered */}
-        <div className="glass rounded-3xl p-8 w-full max-w-md">
+        <div className="glass rounded-3xl p-8 w-full max-w-md mx-auto mb-8 lg:mb-0">
           <div className="text-center mb-6">
             <div className="glass rounded-2xl p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
               <LogIn className="h-8 w-8 text-blue-500" />
@@ -127,7 +127,7 @@ export default function Login() {
         </aside>
 
         {/* Mobile Proje Satın Al Panel */}
-        <aside className="glass rounded-2xl p-6 w-full max-w-md mt-6 lg:hidden">
+        <aside className="glass rounded-2xl p-6 w-full max-w-md mx-auto lg:hidden">
           <div className="flex items-center gap-2 mb-3">
             <ShoppingCart className="h-5 w-5 text-blue-500" />
             <h3 className="text-lg font-semibold">Proje Satın Al</h3>
