@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+html, body, #__next { height: 100%; }
+body { @apply bg-zinc-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100; }
+a { @apply text-blue-600 hover:underline; }
+input, select, textarea { @apply bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded px-3 py-2; }
+button { @apply rounded px-3 py-2; }
+.btn { @apply bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800; }
+.btn-secondary { @apply bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 hover:opacity-90; }
+.card { @apply rounded-2xl shadow-lg shadow-black/5 dark:shadow-black/25 border border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/60; }
+.container { @apply max-w-6xl mx-auto px-4; }
